@@ -1,43 +1,49 @@
 package tests;
 
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.openqa.selenium.By;
+import org.openqa.selenium.chrome.ChromeDriver;
+import pages.ContactUsFormPage;
+import pages.TopMenu;
+import utils.PageTitleUtils;
 
-import org.openqa.selenium.WebElement;
-
-import org.openqa.selenium.support.ui.ExpectedConditions;
-import org.openqa.selenium.support.ui.WebDriverWait;
-
-import java.time.Duration;
 
 import static org.assertj.core.api.Assertions.*;
 
 public class ContactUsTest extends BaseTest {
 
+    private TopMenu topMenu;  // - utworzony object
+    private ContactUsFormPage contactUsFormPage;
+
+    @BeforeEach
+    public void setupTest() {
+
+        driver = new ChromeDriver();
+        driver.get(BASE_URL);
+        assertThat(driver.getTitle()).isEqualTo(PageTitleUtils.HOME_PAGE_TITLE);
+
+        topMenu = new TopMenu(driver);  // - zainicjalizowany object
+        contactUsFormPage = new ContactUsFormPage(driver);
+    }
+
     @Test
     public void shouldNotAllowedToSendEmptyContactUsForm() {
 
-        driver.findElement(By.xpath(".//a[contains(@href,'http://automationpractice.com/index.php?controller=contact')]")).click();
-        driver.findElement(By.id("submitMessage")).click();
-        WebElement alertBox = driver.findElement(By.className("alert-danger"));
-        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(3));
-        wait.until(ExpectedConditions.visibilityOf(alertBox));
-        assertThat(alertBox.isDisplayed()).isTrue();
+        topMenu.clickOnLink();
+        contactUsFormPage.clickOnSubmitButton();
+
+        assertThat(contactUsFormPage.isRedAlertBoxDisplayed()).isTrue();
 
     }
 
     @Test
     public void shouldNotSendContactFormWithOnlyEmail() {
 
-        driver.findElement(By.xpath(".//a[contains(@href,'http://automationpractice.com/index.php?controller=contact')]")).click();
-        WebElement email = driver.findElement(By.id("email"));
-        email.sendKeys("iron@wp");
-        driver.findElement(By.id("submitMessage")).click();
-        WebElement alertBox = driver.findElement(By.className("alert-danger"));
-        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(3));
-        wait.until(ExpectedConditions.visibilityOf(alertBox));
-        assertThat(alertBox.isDisplayed()).isTrue();
+        topMenu.clickOnLink();
+        contactUsFormPage.enterEmail("iron@wp.pl");
+        contactUsFormPage.clickOnSubmitButton();
+        assertThat(contactUsFormPage.isRedAlertBoxDisplayed()).isTrue();
 
     }
 }
