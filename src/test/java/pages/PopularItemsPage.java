@@ -3,15 +3,16 @@ package pages;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
-import org.openqa.selenium.support.PageFactory;
+
 
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class PopularItemsPage {
+public class PopularItemsPage extends BasePage {
 
     public PopularItemsPage(WebDriver driver) {
-        PageFactory.initElements(driver, this);
+        super(driver);
+
     }
 
     @FindBy(css = "#homefeatured .product-name")

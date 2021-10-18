@@ -1,6 +1,8 @@
 package tests;
 
 
+import enums.MessageSubject;
+import model.Message;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.openqa.selenium.chrome.ChromeDriver;
@@ -45,5 +47,20 @@ public class ContactUsTest extends BaseTest {
         contactUsFormPage.clickOnSubmitButton();
         assertThat(contactUsFormPage.isRedAlertBoxDisplayed()).isTrue();
 
+    }
+
+    @ Test
+    public void shouldSendContactUsFormWithValidData(){
+        topMenu.clickOnLink();
+
+        Message message = new Message();
+        message.setSubject(MessageSubject.WEBMASTER);
+        message.setEmail("iron@w.pl");
+        message.setOrderReference("SomeText");
+        message.setMessage("Some message");
+
+
+        contactUsFormPage.sendContactUsForm(message);
+        assertThat(contactUsFormPage.isGreenAlertBoxDisplayed()).isTrue();
     }
 }
